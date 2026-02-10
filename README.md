@@ -29,7 +29,7 @@ brew install --cask ghostty
 ### Clone and stow
 
 ```fish
-git clone https://github.com/YOUR_USER/dotfiles ~/Code/dotfiles
+git clone https://github.com/VincentStark/dotfiles ~/Code/dotfiles
 cd ~/Code/dotfiles
 stow -t ~ fish nvim tmux yazi lazygit ghostty
 ```
