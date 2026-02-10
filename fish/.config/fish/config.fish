@@ -15,8 +15,8 @@ set -gx PATH /opt/homebrew/bin /opt/homebrew/sbin $PATH
 # Proxy binaries are managed by rustup in homebrew
 set -gx RUSTUP_HOME $HOME/.rustup
 set -gx CARGO_HOME $HOME/.cargo
-# Add the toolchain bin directory to PATH
-set -gx PATH $HOME/.rustup/toolchains/stable-aarch64-apple-darwin/bin $PATH
+# Add the toolchain and cargo bin directories to PATH
+set -gx PATH $HOME/.cargo/bin $HOME/.rustup/toolchains/stable-aarch64-apple-darwin/bin $PATH
 
 # Flutter
 set -gx PATH $HOME/flutter/bin $PATH

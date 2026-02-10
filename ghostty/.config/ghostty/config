@@ -1,4 +1,4 @@
-theme = catppuccin-mocha
+theme = Catppuccin Mocha
 term = xterm-256color
 quit-after-last-window-closed = true
 window-inherit-working-directory = false
