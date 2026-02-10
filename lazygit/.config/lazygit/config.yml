@@ -1,0 +1,116 @@
+gui:
+  # Nerd Font icons
+  nerdFontsVersion: "3"
+  showDivergenceFromBaseBranch: arrowAndNumber
+  showFileIcons: true
+  showIcons: true
+
+  # UI behavior
+  showRandomTip: false
+  showCommandLog: false
+  showBottomLine: true
+  showPanelJumps: true
+  showFileTree: true
+  showRootItemInFileTree: true
+  animateExplosion: true
+  border: rounded
+  mainPanelSplitMode: flexible
+
+  # Mouse support (useful in tmux)
+  mouseEvents: true
+
+  # Scroll behavior
+  scrollHeight: 2
+  scrollPastBottom: true
+  scrollOffMargin: 2
+  scrollOffBehavior: margin
+
+  # Catppuccin Mocha theme (blue accent)
+  theme:
+    activeBorderColor:
+      - "#89b4fa"
+      - bold
+    inactiveBorderColor:
+      - "#a6adc8"
+    optionsTextColor:
+      - "#89b4fa"
+    selectedLineBgColor:
+      - "#313244"
+    cherryPickedCommitBgColor:
+      - "#45475a"
+    cherryPickedCommitFgColor:
+      - "#89b4fa"
+    unstagedChangesColor:
+      - "#f38ba8"
+    defaultFgColor:
+      - "#cdd6f4"
+    searchingActiveBorderColor:
+      - "#f9e2af"
+  authorColors:
+    "*": "#b4befe"
+
+git:
+  # Use delta for diffs
+  pagers:
+    - pager: "delta --dark --paging=never"
+      colorArg: "always"
+
+  # Commit behavior
+  commit:
+    signOff: false
+    autoWrapCommitMessage: true
+    autoWrapWidth: 72
+
+  # Branch management
+  mainBranches:
+    - master
+    - main
+  autoFetch: true
+  autoRefresh: true
+  fetchAll: true
+  autoStageResolvedConflicts: true
+
+  # Better log display
+  log:
+    order: topo-order
+    showGraph: always
+    showWholeGraph: false
+
+  # Sort branches by most recent
+  localBranchSortOrder: date
+  remoteBranchSortOrder: date
+
+  # Diff settings
+  diffContextSize: 3
+
+# Don't nag about updates (installed via Homebrew)
+update:
+  method: never
+
+# Faster refresh for responsiveness
+refresher:
+  refreshInterval: 10
+  fetchInterval: 60
+
+# Don't confirm on quit
+confirmOnQuit: false
+quitOnTopLevelReturn: true
+
+# Prompt before returning from subprocess (useful in tmux)
+promptToReturnFromSubprocess: true
+
+# Disable startup popups
+disableStartupPopups: true
+
+# Custom commands
+customCommands:
+  - key: "<c-p>"
+    context: "global"
+    command: "git push"
+    description: "Push"
+    loadingText: "Pushing..."
+  - key: "P"
+    context: "global"
+    command: "git pull --rebase"
+    description: "Pull (rebase)"
+    loadingText: "Pulling..."

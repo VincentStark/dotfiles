@@ -1,0 +1,71 @@
+theme = catppuccin-mocha
+term = xterm-256color
+quit-after-last-window-closed = true
+window-inherit-working-directory = false
+background-opacity = 0.9
+background-blur-radius = 20
+font-family = "JetBrains Mono"
+window-padding-x = 10
+window-padding-y = 10
+
+# Clipboard integration (enables OSC52 passthrough from tmux)
+copy-on-select = clipboard
+clipboard-read = allow
+clipboard-write = allow
+
+# Force Ghostty to take control of the cursor
+shell-integration-features = no-cursor
+
+# Now these settings will actually apply
+cursor-style = block
+cursor-style-blink = false
+keybind = shift+enter=text:\n
+
+# --- CLEAN UI ---
+macos-titlebar-style = hidden
+macos-titlebar-proxy-icon = hidden
+window-save-state = never
+
+# --- TMUX KEYBINDINGS ---
+
+# Window (tab) management
+keybind = super+t=text:\x02c
+keybind = super+w=ignore
+keybind = super+shift+left_bracket=text:\x02p
+keybind = super+shift+right_bracket=text:\x02n
+# Unbind Ghostty's default goto_tab (v1.2.0+ uses digit_ key names)
+keybind = super+digit_1=unbind
+keybind = super+digit_2=unbind
+keybind = super+digit_3=unbind
+keybind = super+digit_4=unbind
+keybind = super+digit_5=unbind
+keybind = super+digit_6=unbind
+keybind = super+digit_7=unbind
+keybind = super+digit_8=unbind
+keybind = super+digit_9=unbind
+# Rebind to tmux window switching
+keybind = super+digit_1=text:\x02\x31
+keybind = super+digit_2=text:\x02\x32
+keybind = super+digit_3=text:\x02\x33
+keybind = super+digit_4=text:\x02\x34
+keybind = super+digit_5=text:\x02\x35
+keybind = super+digit_6=text:\x02\x36
+keybind = super+digit_7=text:\x02\x37
+keybind = super+digit_8=text:\x02\x38
+keybind = super+digit_9=text:\x02\x39
+
+# Pane (split) management
+keybind = super+d=text:\x02|
+keybind = super+shift+d=text:\x02-
+
+# Pane navigation (cmd+alt+arrow → prefix + hjkl)
+keybind = super+alt+left=text:\x02h
+keybind = super+alt+right=text:\x02l
+keybind = super+alt+up=text:\x02k
+keybind = super+alt+down=text:\x02j
+
+# Zoom pane (fullscreen toggle)
+keybind = super+shift+f=text:\x02z
+
+# Rename window
+keybind = super+shift+t=text:\x02,

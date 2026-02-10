@@ -1,0 +1,10 @@
+# Fish shell generated files
+fish/.config/fish/fish_variables
+fish/.config/fish/completions/
+fish/.config/fish/conf.d/
+fish/.config/fish/functions/
+
+# Neovim cache (lazy-lock.json is committed for reproducibility)
+
+# OS files
+.DS_Store
