@@ -6,7 +6,7 @@ k9s:
   apiServerTimeout: 2m0s
   maxConnRetry: 5
   readOnly: false
-  noExitOnCtrlC: false
+  noExitOnCtrlC: true
   portForwardAddress: localhost
   ui:
     enableMouse: true
