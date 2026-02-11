@@ -12,6 +12,7 @@ Terminal dev environment managed with [GNU Stow](https://www.gnu.org/software/st
 | [Yazi](https://yazi-rs.github.io/) | File manager | `yazi/.config/yazi/` |
 | [Lazygit](https://github.com/jesseduffield/lazygit) | Git TUI | `lazygit/.config/lazygit/config.yml` |
 | [Fish](https://fishshell.com/) | Shell | `fish/.config/fish/config.fish` |
+| [Git](https://git-scm.com/) | Version control | `git/.gitconfig`, `git/.config/git/ignore` |
 | [k9s](https://k9scli.io/) | Kubernetes TUI | `k9s/.config/k9s/` |
 
 ## Theme
@@ -32,7 +33,7 @@ brew install --cask ghostty
 ```fish
 git clone https://github.com/VincentStark/dotfiles ~/Code/dotfiles
 cd ~/Code/dotfiles
-stow -t ~ fish nvim tmux yazi lazygit ghostty k9s
+stow -t ~ fish nvim tmux yazi lazygit ghostty k9s git
 ```
 
 ### Ghostty macOS symlink
@@ -72,6 +73,8 @@ dotfiles/
 ├── yazi/.config/yazi/           Yazi file manager
 ├── lazygit/.config/lazygit/     Lazygit
 ├── ghostty/.config/ghostty/     Ghostty terminal
+├── git/.gitconfig                Git config
+│   └── .config/git/ignore        Global gitignore
 ├── k9s/.config/k9s/             Kubernetes TUI
 ├── TOOLS-CHEATSHEET.md          Keybinding reference
 └── README.md
