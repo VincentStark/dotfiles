@@ -12,6 +12,9 @@ end, { desc = "Reveal file in Neo-tree" })
 map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move selection down" })
 map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move selection up" })
 
+-- Cmd+C (via Ghostty csi:99;6u → Ctrl+Shift+C) yanks to system clipboard
+map("v", "<C-S-c>", '"+y', { desc = "Copy to system clipboard" })
+
 -- Keep cursor centered when searching
 map("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 map("n", "N", "Nzzzv", { desc = "Prev search result (centered)" })
