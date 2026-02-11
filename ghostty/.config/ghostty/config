@@ -3,14 +3,19 @@ quit-after-last-window-closed = true
 window-inherit-working-directory = false
 background-opacity = 0.9
 background-blur-radius = 20
-font-family = "JetBrains Mono"
+font-family = "Berkeley Mono"
 window-padding-x = 10
 window-padding-y = 10
 
 # Clipboard integration (enables OSC52 passthrough from tmux)
-copy-on-select = clipboard
+# Disable auto-copy so it doesn't fight with tmux mouse mode;
+# use Cmd+C to copy selected text explicitly instead.
+copy-on-select = false
 clipboard-read = allow
 clipboard-write = allow
+keybind = performable:ctrl+shift+c=copy_to_clipboard
+keybind = super+c=csi:99;6u
+selection-invert-fg-bg = true
 
 # Force Ghostty to take control of the cursor
 shell-integration-features = no-cursor

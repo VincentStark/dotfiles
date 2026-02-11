@@ -1,4 +1,15 @@
 return {
+  -- Disable snacks explorer (conflicts with neo-tree)
+  {
+    "folke/snacks.nvim",
+    opts = {
+      explorer = { enabled = false },
+    },
+    keys = {
+      { "<leader>gd", false },
+    },
+  },
+
   -- Neo-tree: show dotfiles, hide junk
   {
     "nvim-neo-tree/neo-tree.nvim",
@@ -31,6 +42,22 @@ return {
         layout_config = {
           prompt_position = "top",
         },
+      },
+    },
+  },
+
+  -- Diffview: git diff viewer (like VSCode's Changes tab)
+  {
+    "sindrets/diffview.nvim",
+    cmd = { "DiffviewOpen", "DiffviewFileHistory" },
+    keys = {
+      { "<leader>gd", "<cmd>DiffviewOpen<cr>", desc = "Diffview: working changes" },
+      { "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", desc = "Diffview: file history" },
+      { "<leader>gH", "<cmd>DiffviewFileHistory<cr>", desc = "Diffview: branch history" },
+    },
+    opts = {
+      view = {
+        default = { layout = "diff2_horizontal" },
       },
     },
   },
