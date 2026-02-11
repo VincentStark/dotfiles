@@ -36,3 +36,6 @@ alias vim nvim
 alias river 'gcloud auth login && gcloud auth application-default login'
 alias claude 'claude --dangerously-skip-permissions'
 alias lg lazygit
+
+# OpenClaw Completion
+source "/Users/user/.openclaw/completions/openclaw.fish"
