@@ -1,0 +1,76 @@
+# yaml-language-server: $schema=https://gh-dash.dev/schema.json
+
+prSections:
+  - title: My PRs
+    filters: is:open author:@me
+  - title: Needs Review
+    filters: is:open review-requested:@me
+  - title: Involved
+    filters: is:open involves:@me -author:@me
+
+issuesSections:
+  - title: My Issues
+    filters: is:open author:@me
+  - title: Assigned
+    filters: is:open assignee:@me
+
+defaults:
+  prsLimit: 20
+  issuesLimit: 20
+  preview:
+    open: true
+    width: 60
+  refetchIntervalMinutes: 5
+  layout:
+    prs:
+      updatedAt:
+        width: 7
+      repo:
+        width: 15
+      author:
+        width: 15
+        hidden: true
+      title:
+        grow: true
+      reviewStatus:
+        width: 7
+      state:
+        width: 7
+      ci:
+        width: 7
+      lines:
+        width: 10
+  dateFormat: relative
+
+pager:
+  diff: delta
+
+repoPaths:
+  pxy-ai/monorepo: ~/Code/monorepo
+
+keybindings:
+  universal:
+    - key: g
+      name: lazygit
+      command: cd {{.RepoPath}} && lazygit
+  prs:
+    - key: b
+      name: checkout
+      builtin: checkout
+    - key: d
+      name: diff
+      builtin: diff
+    - key: C
+      name: checks
+      builtin: watchChecks
+    - key: v
+      name: view in nvim
+      command: cd {{.RepoPath}} && git fetch origin {{.HeadRefName}} && git checkout {{.HeadRefName}} && nvim .
+    - key: W
+      name: view in browser
+      command: gh pr view --web --repo {{.RepoName}} {{.PrNumber}}
+    - key: M
+      name: merge
+      command: gh pr merge --repo {{.RepoName}} {{.PrNumber}}
+
+confirmQuit: false
