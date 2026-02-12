@@ -6,5 +6,9 @@ fish/.config/fish/functions/
 
 # Neovim cache (lazy-lock.json is committed for reproducibility)
 
+# Claude Code - never commit settings (contains API key)
+claude/.claude/settings.json
+claude/.claude/settings.local.json
+
 # OS files
 .DS_Store
