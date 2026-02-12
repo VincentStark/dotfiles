@@ -4,6 +4,7 @@
 - Always ensure the code is nice, clean, lean, accurate, idiomatic, consistent, coherent, with no issues/bugs/regressions. Be very thorough!
 - Never add "Co-Authored-By" lines to git commits.
 - Never add "🤖 Generated with [Claude Code](https://claude.com/claude-code)" lines to commits or PRs.
+- Never commit or push to Git unless the user explicitly requests it. The user will invoke `/commit` when they want to commit and push.
 - **When committing, always stage ALL changes from the session** — including formatter/linter-induced reformatting of existing files. Never selectively exclude files just because their changes are "only formatting". If a formatter touched the file during this session, it's part of the work and must be committed. Run `git status` after committing to verify a clean working tree; if any unstaged changes remain, they were missed and must be committed too.
 - When making changes to dotfiles/config files (e.g., tmux, ghostty, k9s, fish, etc.), always commit and push the updated files in `~/Code/dotfiles` afterwards.
 - When creating PRs, always rebase from main/master first and resolve all conflicts (if any) before creating the PR.
@@ -64,6 +65,15 @@ When a Rust project uses SQLx with compile-time query checking (`sqlx::query!` m
 - Use `$(command)` for command substitution, not backticks.
 - For functions invoked only via `trap`, add `# shellcheck disable=SC2317,SC2329` above the function definition.
 - Install shellcheck: `brew install shellcheck`.
+- When a project has shell scripts alongside other languages, shellcheck should be added to the same pre-commit hook that runs the other linters. Example pre-commit snippet:
+
+  ```bash
+  # Lint shell scripts
+  sh_files=$(git diff --cached --name-only --diff-filter=ACM -- '*.sh')
+  if [ -n "$sh_files" ]; then
+      shellcheck $sh_files || exit 1
+  fi
+  ```
 
 ## Pre-Commit Checklist (All Languages)
 
