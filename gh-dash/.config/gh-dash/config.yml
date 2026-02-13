@@ -20,7 +20,7 @@ defaults:
   preview:
     open: true
     width: 60
-  refetchIntervalMinutes: 5
+  refetchIntervalMinutes: 1
   layout:
     prs:
       updatedAt:
