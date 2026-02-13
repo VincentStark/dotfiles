@@ -124,37 +124,40 @@ git checkout vstark/<generated-branch-name>
 
 ## Phase 2: Review Bot Monitoring & Fix Loop
 
-After the PR is created, monitor for review bot comments and CI checks. Repeat until all checks pass.
+After the PR is created, monitor for review bot comments and CI checks. The "Claude Code Review" bot typically completes before other CI checks — act on its feedback **immediately** without waiting for the rest of CI.
 
-**CRITICAL: No sleeps. No busy-wait polling.** Use event-driven `--watch` flags which stream updates and return immediately when all checks resolve. Never use `sleep` commands.
+**CRITICAL: No sleeps. No busy-wait polling.** Use event-driven `--watch` flags which stream updates and return immediately when checks resolve. Never use `sleep` commands.
 
 7. **Gauge expected CI duration from recent runs:**
    ```bash
    gh run list --limit 5 --json databaseId,status,conclusion,updatedAt,createdAt
    ```
-   Compare `createdAt` and `updatedAt` timestamps of completed runs to estimate typical CI duration. This helps you know how long `--watch` will block. If CI typically runs fast (<2 min), the watch will return quickly. If CI is slow (>10 min), be aware the watch may block for a while — this is fine, it's event-driven and not wasting cycles.
+   Compare `createdAt` and `updatedAt` timestamps of completed runs to estimate typical CI duration.
 
-8. **Wait for CI checks (event-driven, no polling):**
+8. **Wait for "Claude Code Review" check specifically (not all checks):**
    ```bash
-   gh pr checks <PR_NUMBER> --watch
+   gh pr checks <PR_NUMBER> --watch --fail-fast
    ```
-   This streams status updates and exits as soon as all checks complete (default poll interval is 10s). If any check fails, `gh pr checks --watch` will still wait for the remaining checks to finish before exiting. The exit code indicates the result: 0 = all passed, non-zero = failure.
-
-   If the watch hangs or the command is interrupted, fall back to a single non-watch check:
+   Use `--fail-fast` so it exits as soon as any check fails (including the review bot). If `--fail-fast` is not available, use a timeout:
    ```bash
-   gh pr checks <PR_NUMBER>
+   timeout 120 gh pr checks <PR_NUMBER> --watch
    ```
-   If checks are still pending, report the status and ask the user whether to keep waiting.
+   While waiting, **also check for review comments in parallel.** The goal is to detect the "Claude Code Review" bot's feedback as early as possible. After the watch returns (or is interrupted), immediately proceed to step 9.
 
-9. **Fetch review bot comments immediately after checks resolve:**
+   **If the watch completes with all checks passing and no review comments exist, skip directly to Phase 3 (Merge).**
+
+9. **Fetch review comments — prioritize "Claude Code Review":**
    ```bash
-   gh pr view <PR_NUMBER> --comments
+   gh api repos/{owner}/{repo}/pulls/<PR_NUMBER>/reviews
    gh api repos/{owner}/{repo}/pulls/<PR_NUMBER>/comments
    gh api repos/{owner}/{repo}/issues/<PR_NUMBER>/comments
    ```
+   Look specifically for comments/reviews from the **"Claude Code Review"** bot (or similar review bot). If a review from "Claude Code Review" is found, **immediately act on it** (proceed to step 10) — do NOT wait for other CI checks to finish first.
 
-10. **If review bot leaves comments or CI checks fail:**
-    - Read each comment/failure carefully
+   If no review comments exist yet but checks are still running, re-run step 8 to continue waiting.
+
+10. **Fix review bot feedback immediately:**
+    - Read each review comment carefully
     - Fix the issues in the code
     - Run formatters and linters appropriate for the project language (see Pre-Commit Checklist in CLAUDE.md)
     - Stage, commit, and push the fixes:
@@ -168,13 +171,21 @@ After the PR is created, monitor for review bot comments and CI checks. Repeat u
       )"
       git push
       ```
-    - Go back to step 8 and wait for checks again
+    - Go back to step 8 to monitor the new round of checks
 
-11. **Repeat steps 8-10 until ALL checks are green and no unresolved review bot comments remain.**
+11. **After all review bot comments are addressed, wait for remaining CI checks:**
+    ```bash
+    gh pr checks <PR_NUMBER> --watch
+    ```
+    This final watch waits for ALL checks to complete. If any check fails:
+    - Fetch the failure details and fix them
+    - Stage, commit, push, and repeat this step
+
+12. **Repeat steps 8-11 until ALL checks are green and no unresolved review bot comments remain.**
 
 ## Phase 3: Merge
 
-12. **Once all checks pass and there are no unresolved comments, merge the PR:**
+13. **Once all checks pass and there are no unresolved comments, merge the PR:**
     ```bash
     gh pr merge <PR_NUMBER> --squash --delete-branch
     ```
@@ -182,12 +193,12 @@ After the PR is created, monitor for review bot comments and CI checks. Repeat u
 
 ## Phase 4: Post-Merge Verification
 
-13. **Switch back to the base branch and pull:**
+14. **Switch back to the base branch and pull:**
     ```bash
     git checkout main && git pull
     ```
 
-14. **Monitor post-merge CI/CD (event-driven, no polling):**
+15. **Monitor post-merge CI/CD (event-driven, no polling):**
     Identify the workflow run triggered by the merge commit:
     ```bash
     gh run list --branch main --limit 5 --json databaseId,status,conclusion,headSha,name,event
@@ -198,7 +209,7 @@ After the PR is created, monitor for review bot comments and CI checks. Repeat u
     ```
     `gh run watch` streams live updates and exits when the run completes. Do NOT add any `sleep` commands around this.
 
-15. **If post-merge CI/CD fails:**
+16. **If post-merge CI/CD fails:**
     - Inspect the failure immediately:
       ```bash
       gh run view <RUN_ID> --log-failed
@@ -206,7 +217,7 @@ After the PR is created, monitor for review bot comments and CI checks. Repeat u
     - Fix the issue on a new branch, then repeat the full PR process (Phase 1-4) for the fix
     - If the failure is unrelated to the changes made (pre-existing flake), note it in the output
 
-16. **Repeat steps 14-15 until post-merge steps complete successfully.**
+17. **Repeat steps 15-16 until post-merge steps complete successfully.**
 
 ## Output
 
