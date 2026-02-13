@@ -62,9 +62,25 @@ keybindings:
     - key: d
       name: diff
       builtin: diff
+    - key: c
+      name: view checks
+      command: /opt/homebrew/bin/watch -c -n 1 "GH_FORCE_TTY=120 gh pr checks --repo {{.RepoName}} {{.PrNumber}}"
     - key: C
-      name: checks
+      name: checks in browser
+      command: gh pr checks --web --repo {{.RepoName}} {{.PrNumber}}
+    - key: w
+      name: watch checks
       builtin: watchChecks
+    - key: o
+      name: post-merge runs
+      command: >-
+        set SHA (gh pr view {{.PrNumber}} --repo {{.RepoName}} --json mergeCommit -q '.mergeCommit.oid');
+        and /opt/homebrew/bin/watch -c -n 1 "GH_FORCE_TTY=120 gh run list --repo {{.RepoName}} --commit $SHA --limit 10"
+    - key: O
+      name: post-merge runs (browser)
+      command: >-
+        set SHA (gh pr view {{.PrNumber}} --repo {{.RepoName}} --json mergeCommit -q '.mergeCommit.oid');
+        and open "https://github.com/{{.RepoName}}/commit/$SHA/checks"
     - key: v
       name: view in nvim
       command: cd {{.RepoPath}} && git fetch origin {{.HeadRefName}} && git checkout {{.HeadRefName}} && nvim .
