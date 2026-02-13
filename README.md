@@ -16,6 +16,7 @@ Terminal dev environment managed with [GNU Stow](https://www.gnu.org/software/st
 | [k9s](https://k9scli.io/) | Kubernetes TUI | `k9s/.config/k9s/` |
 | [gh-dash](https://github.com/dlvhdr/gh-dash) | GitHub dashboard TUI | `gh-dash/.config/gh-dash/config.yml` |
 | [Claude Code](https://claude.com/claude-code) | AI coding assistant | `claude/.claude/` |
+| [JankyBorders](https://github.com/FelixKratz/JankyBorders) | Focused window border | `borders/.config/borders/bordersrc` |
 
 ## Theme
 
@@ -29,6 +30,8 @@ Catppuccin Mocha everywhere: tmux, Neovim, Yazi, Lazygit, k9s.
 brew install neovim tmux yazi lazygit fish k9s stow
 gh extension install dlvhdr/gh-dash
 brew install --cask ghostty
+brew tap FelixKratz/formulae
+brew install borders
 ```
 
 ### Clone and stow
@@ -36,7 +39,7 @@ brew install --cask ghostty
 ```fish
 git clone https://github.com/VincentStark/dotfiles ~/Code/dotfiles
 cd ~/Code/dotfiles
-stow -t ~ fish nvim tmux yazi lazygit ghostty k9s git claude gh-dash
+stow -t ~ fish nvim tmux yazi lazygit ghostty k9s git claude gh-dash borders
 ```
 
 ### Ghostty macOS symlink
@@ -62,6 +65,14 @@ ya pkg add yazi-rs/plugins:full-border
 ya pkg add yazi-rs/plugins:chmod
 ```
 
+### JankyBorders
+
+Start the service so it auto-launches on login:
+
+```fish
+brew services start borders
+```
+
 ### Neovim
 
 Open `nvim` — Lazy.nvim and Mason will auto-install everything on first launch.
@@ -81,6 +92,7 @@ dotfiles/
 ├── k9s/.config/k9s/             Kubernetes TUI
 ├── gh-dash/.config/gh-dash/     GitHub dashboard TUI
 ├── claude/.claude/              Claude Code config & commands
+├── borders/.config/borders/     JankyBorders (focused window border)
 ├── TOOLS-CHEATSHEET.md          Keybinding reference
 └── README.md
 ```
