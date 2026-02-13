@@ -3,12 +3,12 @@
 prSections:
   - title: My PRs
     filters: is:open author:@me
+  - title: My Closed PRs
+    filters: is:closed author:@me
   - title: Needs Review
     filters: is:open review-requested:@me
   - title: Involved
     filters: is:open involves:@me -author:@me
-  - title: My Closed PRs
-    filters: is:closed author:@me
 
 issuesSections:
   - title: My Issues
