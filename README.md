@@ -77,6 +77,29 @@ brew services start borders
 
 Open `nvim` — Lazy.nvim and Mason will auto-install everything on first launch.
 
+### Auto-sync (launchd)
+
+A launchd agent pulls the latest dotfiles and restows every hour:
+
+```fish
+cp ~/Code/dotfiles/launchd/com.dotfiles.sync.plist ~/Library/LaunchAgents/
+launchctl bootstrap gui/(id -u) ~/Library/LaunchAgents/com.dotfiles.sync.plist
+```
+
+Logs are written to `~/.local/state/dotfiles-sync.log`. The job skips the pull if there are uncommitted local changes.
+
+To check status:
+
+```fish
+launchctl print gui/(id -u)/com.dotfiles.sync
+```
+
+To unload:
+
+```fish
+launchctl bootout gui/(id -u) ~/Library/LaunchAgents/com.dotfiles.sync.plist
+```
+
 ## Structure
 
 ```
@@ -93,6 +116,8 @@ dotfiles/
 ├── gh-dash/.config/gh-dash/     GitHub dashboard TUI
 ├── claude/.claude/              Claude Code config & commands
 ├── borders/.config/borders/     JankyBorders (focused window border)
+├── bin/dotfiles-sync.sh         Auto-sync script (used by launchd)
+├── launchd/                     launchd plist (not stowed)
 ├── TOOLS-CHEATSHEET.md          Keybinding reference
 └── README.md
 ```

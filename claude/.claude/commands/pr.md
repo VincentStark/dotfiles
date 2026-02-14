@@ -122,66 +122,69 @@ Then check out the PR branch again before continuing:
 git checkout vstark/<generated-branch-name>
 ```
 
-## Phase 2: Review Bot Monitoring & Fix Loop
+## Phase 2A: Review Bot Loop
 
-After the PR is created, monitor for review bot comments and CI checks. The "Claude Code Review" bot typically completes before other CI checks — act on its feedback **immediately** without waiting for the rest of CI.
+After the PR is created, focus **exclusively** on the "Claude Code Review" bot first. Do NOT wait for all CI checks — only the review bot check matters at this stage.
 
-**CRITICAL: No sleeps. No busy-wait polling.** Use event-driven `--watch` flags which stream updates and return immediately when checks resolve. Never use `sleep` commands.
+**CRITICAL: No sleeps. No busy-wait polling.** Use `--watch` flags or API queries. Never use `sleep` commands.
 
-7. **Gauge expected CI duration from recent runs:**
-   ```bash
-   gh run list --limit 5 --json databaseId,status,conclusion,updatedAt,createdAt
-   ```
-   Compare `createdAt` and `updatedAt` timestamps of completed runs to estimate typical CI duration.
-
-8. **Wait for "Claude Code Review" check specifically (not all checks):**
+7. **Wait for the "Claude Code Review" check to complete:**
    ```bash
    gh pr checks <PR_NUMBER> --watch --fail-fast
    ```
-   Use `--fail-fast` so it exits as soon as any check fails (including the review bot). If `--fail-fast` is not available, use a timeout:
+   As soon as the review bot check resolves (regardless of other checks still running), proceed to step 8. If `--fail-fast` is not available, use:
    ```bash
    timeout 120 gh pr checks <PR_NUMBER> --watch
    ```
-   While waiting, **also check for review comments in parallel.** The goal is to detect the "Claude Code Review" bot's feedback as early as possible. After the watch returns (or is interrupted), immediately proceed to step 9.
 
-   **If the watch completes with all checks passing and no review comments exist, skip directly to Phase 3 (Merge).**
-
-9. **Fetch review comments — prioritize "Claude Code Review":**
+8. **Fetch review bot comments:**
    ```bash
    gh api repos/{owner}/{repo}/pulls/<PR_NUMBER>/reviews
    gh api repos/{owner}/{repo}/pulls/<PR_NUMBER>/comments
    gh api repos/{owner}/{repo}/issues/<PR_NUMBER>/comments
    ```
-   Look specifically for comments/reviews from the **"Claude Code Review"** bot (or similar review bot). If a review from "Claude Code Review" is found, **immediately act on it** (proceed to step 10) — do NOT wait for other CI checks to finish first.
+   Look specifically for comments/reviews from the **"Claude Code Review"** bot (or similar review bot).
 
-   If no review comments exist yet but checks are still running, re-run step 8 to continue waiting.
+   **If no review bot comments exist, skip directly to Phase 2B (step 11).**
 
-10. **Fix review bot feedback immediately:**
-    - Read each review comment carefully
-    - Fix the issues in the code
-    - Run formatters and linters appropriate for the project language (see Pre-Commit Checklist in CLAUDE.md)
-    - Stage, commit, and push the fixes:
-      ```bash
-      git add -A
-      git commit -m "$(cat <<'EOF'
-      fix: address review bot feedback
+9. **Fix review bot feedback:**
+   - Read each review comment carefully
+   - Fix the issues in the code
+   - For any comment you intentionally **disagree with or choose not to fix**, reply to the comment with a clear explanation of why — do not silently ignore it
+   - Run formatters and linters appropriate for the project language (see Pre-Commit Checklist in CLAUDE.md)
+   - Stage, commit, and push the fixes:
+     ```bash
+     git add -A
+     git commit -m "$(cat <<'EOF'
+     fix: address review bot feedback
 
-      <description of what was fixed>
-      EOF
-      )"
-      git push
-      ```
-    - Go back to step 8 to monitor the new round of checks
+     <description of what was fixed>
+     EOF
+     )"
+     git push
+     ```
 
-11. **After all review bot comments are addressed, wait for remaining CI checks:**
+10. **Go back to step 7** to wait for the review bot to re-run on the new commit. After re-fetching comments in step 8, **verify that the bot has updated its comment to confirm the previous feedback is resolved** before concluding the loop. Do not assume fixes are accepted — wait for the bot's updated comment. Repeat steps 7-9 until the review bot has **no new actionable comments** (all fixed or replied to) and the bot's latest comment confirms resolution.
+
+## Phase 2B: CI Checks
+
+Once all review bot comments are resolved (fixed or replied to with justification):
+
+11. **Wait for ALL remaining CI checks to pass:**
     ```bash
     gh pr checks <PR_NUMBER> --watch
     ```
-    This final watch waits for ALL checks to complete. If any check fails:
+    If any check fails:
     - Fetch the failure details and fix them
     - Stage, commit, push, and repeat this step
 
-12. **Repeat steps 8-11 until ALL checks are green and no unresolved review bot comments remain.**
+12. **Verify no new review comments appeared** (fix commits may trigger another review round):
+    ```bash
+    gh api repos/{owner}/{repo}/pulls/<PR_NUMBER>/reviews
+    gh api repos/{owner}/{repo}/pulls/<PR_NUMBER>/comments
+    gh api repos/{owner}/{repo}/issues/<PR_NUMBER>/comments
+    ```
+    If new actionable review comments exist, go back to **step 9** in Phase 2A. Otherwise, proceed to merge.
 
 ## Phase 3: Merge
 
