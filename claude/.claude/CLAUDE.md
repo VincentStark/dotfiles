@@ -2,12 +2,22 @@
 
 - The user's shell is **fish** (fish shell). Use fish-compatible syntax when providing shell commands or scripts.
 - Always ensure the code is nice, clean, lean, accurate, idiomatic, consistent, coherent, with no issues/bugs/regressions. Be very thorough!
+### Git Workflow — General
+
+- **Never perform git actions autonomously.** Do not stage, commit, push, merge, or create PRs unless the user explicitly requests it. The user will invoke `/commit` to commit, `/pr` to create a PR, and will explicitly ask for merges. All git workflow actions require explicit instruction.
 - Never add "Co-Authored-By" lines to git commits.
 - Never add "🤖 Generated with [Claude Code](https://claude.com/claude-code)" lines to commits or PRs.
-- Never commit or push to Git unless the user explicitly requests it. The user will invoke `/commit` when they want to commit and push.
-- **When committing, always stage ALL changes from the session** — including formatter/linter-induced reformatting of existing files. Never selectively exclude files just because their changes are "only formatting". If a formatter touched the file during this session, it's part of the work and must be committed. Run `git status` after committing to verify a clean working tree; if any unstaged changes remain, they were missed and must be committed too.
-- When making changes to dotfiles/config files (e.g., tmux, ghostty, k9s, fish, etc.), always commit and push the updated files in `~/Code/dotfiles` afterwards.
-- When creating PRs, always rebase from main/master first and resolve all conflicts (if any) before creating the PR.
+
+### Git Workflow — Commits
+
+- **When committing (via `/commit`), always stage ALL changes from the session** — including formatter/linter-induced reformatting of existing files. Never selectively exclude files just because their changes are "only formatting". If a formatter touched the file during this session, it's part of the work and must be committed. Run `git status` after committing to verify a clean working tree; if any unstaged changes remain, they were missed and must be committed too.
+- When a session changes dotfiles/config files (e.g., tmux, ghostty, k9s, fish, etc.), include the corresponding updates in `~/Code/dotfiles` as part of the same commit workflow when the user invokes `/commit`.
+
+### Git Workflow — Pull Requests & CI
+
+- **When creating PRs (via `/pr`)**, always rebase from main/master first and resolve all conflicts (if any) before creating the PR.
+- **When monitoring PR/CI status, act on failures immediately.** Do not wait for all checks to finish before addressing a failed step. As soon as any check or CI job fails, start diagnosing and fixing the issue right away while other checks continue running in the background. Commit and push fixes as part of the active `/pr` workflow.
+- **Never merge a PR until review bot comments are confirmed absent.** `gh pr checks --watch` completing green is NOT sufficient — the review bot posts comments separately from check status. After all checks pass, ALWAYS run `gh api repos/{owner}/{repo}/pulls/{number}/reviews` AND `gh api repos/{owner}/{repo}/pulls/{number}/comments` AND `gh api repos/{owner}/{repo}/issues/{number}/comments` and verify all three return empty arrays or contain no actionable feedback before merging. If any review comments exist, address them first.
 - For new projects, create a per-project `CLAUDE.md` in the project root with project-specific instructions (e.g., build commands, architecture notes, naming conventions, test strategies, environment setup). Keep it focused on what's unique to that project — do not duplicate global rules.
 - When a project needs an `.env` file, always create a `.env.example` with documentation of the required variables (names, descriptions, expected format). Ensure `.env` is listed in `.gitignore`. Always verify that `.gitignore` is properly populated for the project's language/framework and warn the user if it is missing entries or is absent entirely.
 - For every new project, create a `README.md` in the project root. When making significant updates to an existing project, update its `README.md` accordingly. The README should clearly explain: what the project is, how to install/set it up, how to use it (CLI commands, API, etc.), configuration options, and any other relevant details. Write it so that both humans and bots/agents can understand how to use the tools and APIs the project provides.

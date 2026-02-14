@@ -34,7 +34,7 @@ set -gx USE_GKE_GCLOUD_AUTH_PLUGIN True
 # Aliases
 alias vim nvim
 alias river 'gcloud auth login && gcloud auth application-default login'
-alias claude 'claude --dangerously-skip-permissions'
+alias claude 'claude --dangerously-skip-permissions --teammate-mode in-process'
 alias lg lazygit
 
 # OpenClaw Completion
