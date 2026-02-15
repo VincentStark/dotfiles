@@ -34,6 +34,6 @@ When changing a tool's config (e.g. tuning colors, keybindings):
 ### Auto-sync (`bin/dotfiles-sync.sh` + `launchd/`)
 
 - A launchd agent runs `bin/dotfiles-sync.sh` every hour to pull and restow.
-- The active plist lives at `~/Library/LaunchAgents/com.dotfiles.sync.plist`; the canonical copy is `launchd/com.dotfiles.sync.plist`.
-- If you edit the plist, copy it to `~/Library/LaunchAgents/` and reload: `launchctl bootout gui/(id -u) ~/Library/LaunchAgents/com.dotfiles.sync.plist && launchctl bootstrap gui/(id -u) ~/Library/LaunchAgents/com.dotfiles.sync.plist`.
+- The canonical plist template is `launchd/com.dotfiles.sync.plist` (uses `$HOME` placeholders — not valid as-is).
+- `bin/install-launchd.sh` expands `$HOME`, writes to `~/Library/LaunchAgents/`, and bootstraps the agent. Run it after any plist edits.
 - Logs: `~/.local/state/dotfiles-sync.log`.

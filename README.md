@@ -79,11 +79,10 @@ Open `nvim` — Lazy.nvim and Mason will auto-install everything on first launch
 
 ### Auto-sync (launchd)
 
-A launchd agent pulls the latest dotfiles and restows every hour:
+A launchd agent pulls the latest dotfiles and restows every hour. The plist uses `$HOME` placeholders, so run the install script to expand them and load the agent:
 
 ```fish
-cp ~/Code/dotfiles/launchd/com.dotfiles.sync.plist ~/Library/LaunchAgents/
-launchctl bootstrap gui/(id -u) ~/Library/LaunchAgents/com.dotfiles.sync.plist
+~/Code/dotfiles/bin/install-launchd.sh
 ```
 
 Logs are written to `~/.local/state/dotfiles-sync.log`. The job skips the pull if there are uncommitted local changes.
@@ -117,6 +116,7 @@ dotfiles/
 ├── claude/.claude/              Claude Code config & commands
 ├── borders/.config/borders/     JankyBorders (focused window border)
 ├── bin/dotfiles-sync.sh         Auto-sync script (used by launchd)
+├── bin/install-launchd.sh       Installs the launchd agent (expands $HOME)
 ├── launchd/                     launchd plist (not stowed)
 ├── TOOLS-CHEATSHEET.md          Keybinding reference
 └── README.md

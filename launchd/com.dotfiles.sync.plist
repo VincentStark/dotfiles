@@ -8,20 +8,20 @@
 	<array>
 		<string>/usr/bin/env</string>
 		<string>bash</string>
-		<string>/Users/vincent/Code/dotfiles/bin/dotfiles-sync.sh</string>
+		<string>$HOME/Code/dotfiles/bin/dotfiles-sync.sh</string>
 	</array>
 	<key>StartInterval</key>
 	<integer>3600</integer>
 	<key>RunAtLoad</key>
 	<true/>
 	<key>StandardOutPath</key>
-	<string>/Users/vincent/.local/state/dotfiles-sync-stdout.log</string>
+	<string>$HOME/.local/state/dotfiles-sync-stdout.log</string>
 	<key>StandardErrorPath</key>
-	<string>/Users/vincent/.local/state/dotfiles-sync-stderr.log</string>
+	<string>$HOME/.local/state/dotfiles-sync-stderr.log</string>
 	<key>EnvironmentVariables</key>
 	<dict>
 		<key>HOME</key>
-		<string>/Users/vincent</string>
+		<string>$HOME</string>
 		<key>PATH</key>
 		<string>/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
 	</dict>
